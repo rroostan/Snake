@@ -15,7 +15,7 @@ namespace Snake
         public GridValue[,] Grid { get; }
         public Direction Dir { get; private set; }
         public int Score { get; private set; }
-        public bool GameOver{ get; private set; }
+        public GameMode Mode { get; set; }
 
         private readonly LinkedList<Direction> dirChanges = new();
         private readonly LinkedList<Position> snakePostions = new();
@@ -35,7 +35,7 @@ namespace Snake
         private void AddSnake()
         {
             int r = Rows / 2;
-            int initSnakeLength = Cols * 7 / 10;
+            int initSnakeLength = Cols * 5 / 10;
             for(int c = 1; c <= initSnakeLength; c++)
             {
                 Grid[r, c] = GridValue.Snake;
@@ -165,7 +165,7 @@ namespace Snake
 
             if (hit == GridValue.Outside || hit == GridValue.Snake)
             {
-                GameOver = true;
+                Mode = GameMode.Over;
             }
             else if (hit == GridValue.Empty)
             {

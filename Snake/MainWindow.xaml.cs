@@ -20,9 +20,8 @@ namespace Snake
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly int msGameLoop = 200;
-        //private readonly int rows = 35, cols = 35; //max
-        private readonly int rows = 32, cols = 32; //normal
+        private readonly int msGameLoop = 250;
+        private readonly int rows = 32, cols = 32; //normal 32 x 32 grid of 1024 cells
         //private readonly int rows = 15, cols = 15; //min
         private readonly Image[,] gridImages;
 
@@ -42,7 +41,6 @@ namespace Snake
         };
 
         private GameState gameState;
-        private bool gameRunning;
 
         public MainWindow()
         {
@@ -54,7 +52,7 @@ namespace Snake
         private async Task RunGame()
         {
             Draw();
-            await ShowCounrdown();
+            await ShowCountdown();
             Overlay.Visibility = Visibility.Hidden;
             await GameLoop();
             await ShowGameOver();
@@ -63,27 +61,44 @@ namespace Snake
 
         private async void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if(Overlay.Visibility == Visibility.Visible)
+            if(Overlay.Visibility == Visibility.Visible && gameState.Mode != GameMode.Paused)
             {
                 e.Handled = true;
             }
 
-            if(!gameRunning)
+            if(gameState.Mode == GameMode.NotStarted)
             {
-                gameRunning = true;
+                gameState.Mode = GameMode.Started;
                 await RunGame();
-                gameRunning = false;
+                gameState.Mode = GameMode.NotStarted;
             }
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if(gameState.GameOver)
+            if(gameState.Mode == GameMode.NotStarted)
             {
                 return;
             }
 
-            switch(e.Key)
+            if (gameState.Mode == GameMode.Over)
+            {
+                return;
+            }
+
+            if (gameState.Mode == GameMode.Started && e.Key == Key.Space)
+            {
+                gameState.Mode = GameMode.Paused;
+                return;
+            }
+
+            if (gameState.Mode == GameMode.Paused && e.Key == Key.Space)
+            {
+                gameState.Mode = GameMode.Resuming;
+                return;
+            }
+
+            switch (e.Key)
             {
                 case Key.Left:
                     gameState.ChangeDirection(Direction.Left);
@@ -102,11 +117,29 @@ namespace Snake
 
         private async Task GameLoop()
         {
-            while(!gameState.GameOver)
+            while (gameState.Mode != GameMode.NotStarted 
+                && gameState.Mode != GameMode.Over)
             {
                 await Task.Delay(msGameLoop);
-                gameState.Move();
-                Draw();
+                if (gameState.Mode == GameMode.Started)
+                {
+                    gameState.Move();
+                    Draw();
+                }
+                else if (gameState.Mode == GameMode.Paused)
+                {
+                    Overlay.Visibility = Visibility.Visible;
+                    OverlayText.Text = "[ P A U S E D ]";
+                }
+                else if (gameState.Mode == GameMode.Resuming)
+                {
+                    Overlay.Visibility = Visibility.Visible;
+                    OverlayText.Text = "[ R e s u m i n g . . . ]";
+                    await Task.Delay(500);
+                    Overlay.Visibility = Visibility.Hidden;
+                    OverlayText.Text = "";
+                    gameState.Mode = GameMode.Started;
+                }
             }
         }
 
@@ -179,11 +212,11 @@ namespace Snake
             }
         }
 
-        private async Task ShowCounrdown()
+        private async Task ShowCountdown()
         {
             for (int i =3; i>=1; i--)
             {
-                OverlayText.Text = $"{i}";
+                OverlayText.Text = $"[ {i} ]";
                 await Task.Delay(500);
             }
         }
@@ -194,6 +227,7 @@ namespace Snake
             await Task.Delay(1000);
             Overlay.Visibility = Visibility.Visible;
             OverlayText.Text = "Press any key to Start";
+            gameState.Mode = GameMode.NotStarted;
         }
     }
 }
