@@ -21,7 +21,7 @@ namespace Snake
     public partial class MainWindow : Window
     {
         private readonly int msGameLoop = 250;
-        private readonly int rows = 32, cols = 32; //normal 32 x 32 grid of 1024 cells
+        private readonly int rows = 50, cols = 50; //normal 32 x 32 grid of 1024 cells
         //private readonly int rows = 15, cols = 15; //min
         private readonly Image[,] gridImages;
 
@@ -34,10 +34,14 @@ namespace Snake
 
         private readonly Dictionary<Direction, int> dirToRotation = new Dictionary<Direction, int>()
         {
-            {Direction.Up, 0 },
-            {Direction.Down, 180 },
-            {Direction.Left, 270 },
-            {Direction.Right, 90 }
+            {Direction.Up,         0 },
+            {Direction.UpRight,    45 },
+            {Direction.Right,      90 },
+            {Direction.DownRight, 135 },
+            {Direction.Down,      180 },
+            {Direction.DownLeft,  225 },
+            {Direction.Left,      270 },
+            {Direction.UpLeft,    315 }
         };
 
         private GameState gameState;
@@ -123,6 +127,22 @@ namespace Snake
                 case Key.Down:
                 case Key.NumPad2:
                     gameState.ChangeDirection(Direction.Down);
+                    break;
+
+                case Key.NumPad7:
+                    gameState.ChangeDirection(Direction.UpLeft);
+                    break;
+
+                case Key.NumPad9:
+                    gameState.ChangeDirection(Direction.UpRight);
+                    break;
+
+                case Key.NumPad3:
+                    gameState.ChangeDirection(Direction.DownRight);
+                    break;
+
+                case Key.NumPad1:
+                    gameState.ChangeDirection(Direction.DownLeft);
                     break;
             }
         }
