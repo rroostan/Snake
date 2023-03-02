@@ -42,11 +42,14 @@ namespace Snake
 
         private GameState gameState;
 
+        private MediaPlayer mediaPlayer;
+
         public MainWindow()
         {
             InitializeComponent();
             gridImages = SetupGrid();
             gameState = new GameState(rows, cols);
+            mediaPlayer = new MediaPlayer();
         }
 
         private async Task RunGame()
@@ -88,6 +91,8 @@ namespace Snake
 
             if (gameState.Mode == GameMode.Started && e.Key == Key.Space)
             {
+                mediaPlayer.Open(new Uri("Assets/intermission.wav", UriKind.Relative));
+                mediaPlayer.Play();
                 gameState.Mode = GameMode.Paused;
                 return;
             }
@@ -101,15 +106,22 @@ namespace Snake
             switch (e.Key)
             {
                 case Key.Left:
+                case Key.NumPad4:
                     gameState.ChangeDirection(Direction.Left);
                     break;
+
                 case Key.Right:
+                case Key.NumPad6:
                     gameState.ChangeDirection(Direction.Right);
                     break;
+
                 case Key.Up:
+                case Key.NumPad8:
                     gameState.ChangeDirection(Direction.Up);
                     break;
+
                 case Key.Down:
+                case Key.NumPad2:
                     gameState.ChangeDirection(Direction.Down);
                     break;
             }
@@ -117,13 +129,33 @@ namespace Snake
 
         private async Task GameLoop()
         {
+            int oldScore = gameState.Score;
+            int newScore = 0;
             while (gameState.Mode != GameMode.NotStarted 
                 && gameState.Mode != GameMode.Over)
             {
                 await Task.Delay(msGameLoop);
                 if (gameState.Mode == GameMode.Started)
                 {
-                    gameState.Move();
+                    newScore = gameState.Move();
+                    if(oldScore != newScore)
+                    {
+                        if (newScore % 50 == 0)
+                        {
+                            mediaPlayer.Open(new Uri("Assets/applause.wav", UriKind.Relative));
+                        }
+                        else
+                        {
+                            mediaPlayer.Open(new Uri("Assets/thwack.wav", UriKind.Relative));
+                        }
+                        mediaPlayer.Play();
+                        oldScore = newScore;
+                    }
+                    //else
+                    //{
+                    //    mediaPlayer.Open(new Uri("Assets/thwack.wav", UriKind.Relative));
+                    //    mediaPlayer.Play();
+                    //}
                     Draw();
                 }
                 else if (gameState.Mode == GameMode.Paused)
@@ -133,6 +165,8 @@ namespace Snake
                 }
                 else if (gameState.Mode == GameMode.Resuming)
                 {
+                    mediaPlayer.Open(new Uri("Assets/eat_fruit.wav", UriKind.Relative));
+                    mediaPlayer.Play();
                     Overlay.Visibility = Visibility.Visible;
                     OverlayText.Text = "[ R e s u m i n g . . . ]";
                     await Task.Delay(500);
@@ -214,15 +248,19 @@ namespace Snake
 
         private async Task ShowCountdown()
         {
-            for (int i =3; i>=1; i--)
+            mediaPlayer.Open(new Uri("Assets/game_start.wav", UriKind.Relative));
+            mediaPlayer.Play();
+            for (int i = 5; i>=1; i--)
             {
                 OverlayText.Text = $"[ {i} ]";
-                await Task.Delay(500);
+                await Task.Delay(1000);
             }
         }
 
         private async Task ShowGameOver()
         {
+            mediaPlayer.Open(new Uri("Assets/death_1.wav", UriKind.Relative));
+            mediaPlayer.Play();
             await DrawDeadSnake();
             await Task.Delay(1000);
             Overlay.Visibility = Visibility.Visible;

@@ -41,6 +41,7 @@ namespace Snake
                 Grid[r, c] = GridValue.Snake;
                 snakePostions.AddFirst(new Position(r, c));
             }
+            Score = initSnakeLength;
         }
 
         private IEnumerable<Position> EmptyPositions()
@@ -152,7 +153,7 @@ namespace Snake
             return Grid[newHeadPos.Row, newHeadPos.Col];
         }
 
-        public void Move()
+        public int Move()
         {
             if(dirChanges.Count > 0)
             {
@@ -178,6 +179,7 @@ namespace Snake
                 Score++;
                 AddFood();
             }
+            return Score;
         }
     }
 }

@@ -8,14 +8,43 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\applause.wav" />
     <None Remove="Assets\Body.png" />
     <None Remove="Assets\DeadBody.png" />
     <None Remove="Assets\DeadHead.png" />
+    <None Remove="Assets\death_1.wav" />
     <None Remove="Assets\DroidSansMono.ttf" />
+    <None Remove="Assets\eat_fruit.wav" />
     <None Remove="Assets\Empty.png" />
     <None Remove="Assets\Food.png" />
+    <None Remove="Assets\FoodORIG.png" />
+    <None Remove="Assets\game_start.wav" />
     <None Remove="Assets\Head.png" />
+    <None Remove="Assets\HeadORIG.png" />
     <None Remove="Assets\icon.ico" />
+    <None Remove="Assets\intermission.wav" />
+    <None Remove="Assets\thwack.wav" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\applause.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\death_1.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\eat_fruit.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\game_start.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\intermission.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\thwack.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -23,9 +52,11 @@
     <Resource Include="Assets\DeadBody.png" />
     <Resource Include="Assets\DeadHead.png" />
     <Resource Include="Assets\DroidSansMono.ttf" />
-    <Resource Include="Assets\Empty.png" />
-    <Resource Include="Assets\Food.png" />
     <Resource Include="Assets\Head.png" />
+    <Resource Include="Assets\Food.png" />
+    <Resource Include="Assets\Empty.png" />
+    <Resource Include="Assets\FoodORIG.png" />
+    <Resource Include="Assets\HeadORIG.png" />
     <Resource Include="Assets\icon.ico" />
   </ItemGroup>
 
