@@ -14,7 +14,9 @@
         WindowStartupLocation="CenterScreen"
         Icon="Assets/icon.ico"
         PreviewKeyDown="Window_PreviewKeyDown"
-        KeyDown="Window_KeyDown"
+        KeyDown="Window_KeyDown"  
+        PreviewMouseLeftButtonDown="Window_PreviewMouseLeftButtonDown"
+        PreviewMouseLeftButtonUp="Window_PreviewMouseLeftButtonUp"
         >
     <Viewbox>
         <Grid>

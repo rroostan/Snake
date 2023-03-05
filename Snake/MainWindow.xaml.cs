@@ -21,8 +21,8 @@ namespace Snake
     public partial class MainWindow : Window
     {
         private readonly int msGameLoop = 250;
-        private readonly int rows = 50, cols = 50; //normal 32 x 32 grid of 1024 cells
-        //private readonly int rows = 15, cols = 15; //min
+        //private readonly int rows = 50, cols = 50; //normal 32 x 32 grid of 1024 cells
+        private readonly int rows = 11, cols = 21; //min 11 x 21 = 231
         private readonly Image[,] gridImages;
 
         private readonly Dictionary<GridValue, ImageSource> gridValToImage = new()
@@ -226,7 +226,7 @@ namespace Snake
         {
             DrawGrid();
             DrawSnakeHead();
-            ScoreText.Text = $"Score: {gameState.Score}";
+            ScoreText.Text = $"Score: {gameState.Score} : {(int) (100 * gameState.Score) / (gameState.Rows * gameState.Cols)}%";
         }
 
         private void DrawGrid()
@@ -245,6 +245,10 @@ namespace Snake
 
         private void DrawSnakeHead()
         {
+            if(gameState == null)
+            {
+                int zzz = 111;
+            }
             Position headPos = gameState.HeadPosition();
             Image image = gridImages[headPos.Row, headPos.Col];
             image.Source = Images.Head;
@@ -274,6 +278,60 @@ namespace Snake
             {
                 OverlayText.Text = $"[ {i} ]";
                 await Task.Delay(1000);
+            }
+        }
+
+        private Point startPoint;
+        private void Window_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            startPoint = e.GetPosition(null);
+        }
+        private void Window_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            Point position = e.GetPosition(this);
+            int minDisplacement = 40;
+            string udlr = string.Empty;
+            int rowOffset = 0;
+            int colOffset = 0;
+            if (Math.Abs(position.X - startPoint.X) > minDisplacement ||
+                Math.Abs(position.Y - startPoint.Y) > minDisplacement)
+            {
+                if (position.Y < startPoint.Y - minDisplacement)
+                {
+                    udlr += "ud:UP ";
+                    rowOffset = -1;
+                }
+                else if (position.Y > startPoint.Y + minDisplacement)
+                {
+                    udlr += "ud:DOWN ";
+                    rowOffset = 1;
+                }
+                else
+                {
+                    udlr += "ud:-- ";
+                }
+
+                if (position.X < startPoint.X - minDisplacement)
+                {
+                    udlr += "lr:LEFT";
+                    colOffset = -1;
+                }
+                else if (position.X > startPoint.X + minDisplacement)
+                {
+                    udlr += "lr:RIGHT";
+                    colOffset = 1;
+                }
+                else
+                {
+                    udlr += "lr:--";
+                }
+
+                Direction dir = new(rowOffset, colOffset);
+                if (gameState.Mode == GameMode.Started)
+                {
+                    gameState.ChangeDirection(dir);
+                }
+
             }
         }
 
