@@ -21,8 +21,9 @@ namespace Snake
     public partial class MainWindow : Window
     {
         private readonly int msGameLoop = 250;
-        //private readonly int rows = 50, cols = 50; //normal 32 x 32 grid of 1024 cells
-        private readonly int rows = 11, cols = 21; //min 11 x 21 = 231
+        //private readonly int rows = 50, cols = 50; //huge   50 x 50 grid of 2500 cells
+        //private readonly int rows = 32, cols = 32; //large  32 x 32 grid of 1024 cells
+        private readonly int rows = 11, cols = 21;   //normal 11 x 21 grid of  231 cells
         private readonly Image[,] gridImages;
 
         private readonly Dictionary<GridValue, ImageSource> gridValToImage = new()
@@ -171,11 +172,6 @@ namespace Snake
                         mediaPlayer.Play();
                         oldScore = newScore;
                     }
-                    //else
-                    //{
-                    //    mediaPlayer.Open(new Uri("Assets/thwack.wav", UriKind.Relative));
-                    //    mediaPlayer.Play();
-                    //}
                     Draw();
                 }
                 else if (gameState.Mode == GameMode.Paused)
@@ -245,10 +241,6 @@ namespace Snake
 
         private void DrawSnakeHead()
         {
-            if(gameState == null)
-            {
-                int zzz = 111;
-            }
             Position headPos = gameState.HeadPosition();
             Image image = gridImages[headPos.Row, headPos.Col];
             image.Source = Images.Head;
