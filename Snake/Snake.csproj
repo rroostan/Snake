@@ -5,6 +5,7 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>disable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,6 +23,7 @@
     <None Remove="Assets\Head.png" />
     <None Remove="Assets\HeadORIG.png" />
     <None Remove="Assets\icon.ico" />
+    <None Remove="Assets\iconORIG.ico" />
     <None Remove="Assets\intermission.wav" />
     <None Remove="Assets\thwack.wav" />
   </ItemGroup>
